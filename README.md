@@ -12,12 +12,7 @@ Optionally, you can also run the solutions with WebAssembly!
 
 ```
 # Setup: install wasmtime
-git clone --recurse-submodules https://github.com/CraneStation/wasmtime.git;
-cd wasmtime;
-cargo build --release;
-cp target/release/wasmtime ~/.bin/;
-# ^ Or another directory that is in your executable $PATH
-cd ..;
+curl https://wasmtime.dev/install.sh -sSf | bash
 ```
 
 ```
