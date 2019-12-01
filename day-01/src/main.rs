@@ -1,11 +1,7 @@
 fn main() {
     const INPUT: &str = include_str!("input.txt");
     // Parse entire input into a list
-    let mut masses: Vec<usize> = Vec::new();
-    for line in INPUT.lines() {
-        let parsed = line.parse::<usize>().unwrap();
-        masses.push(parsed);
-    }
+    let masses: Vec<usize> = INPUT.lines().map(|line| line.parse().unwrap()).collect();
 
     // Part 1
     let fuel: usize = masses.iter().map(|mass| mass_to_fuel(mass)).sum();
