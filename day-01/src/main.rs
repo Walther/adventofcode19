@@ -6,17 +6,14 @@ fn main() {
 
     // Part 1
     let fuel: usize = masses.iter().map(|mass| mass_to_fuel(*mass)).sum();
-    println!("{} of fuel required", fuel);
+    println!("Part 1: {}", fuel);
 
     // Part 2
     let fuel_with_fuel: usize = masses
         .iter()
         .map(|mass| mass_to_fuel_with_fuel(*mass))
         .sum();
-    println!(
-        "{} of fuel required, taking fuel weight into account",
-        fuel_with_fuel
-    );
+    println!("Part 2: {}", fuel_with_fuel);
 }
 
 /// Calculate the required fuel for a given mass, not taking the mass of the
