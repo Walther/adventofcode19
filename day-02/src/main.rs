@@ -1,19 +1,19 @@
+#![deny(clippy::all)]
 use intcode::compute;
 
 fn main() {
     const INPUT: &str = include_str!("input.txt");
     // Parse entire input into a list
     let input: Vec<usize> = INPUT
-        .split(",")
+        .split(',')
         .map(|number| number.parse().unwrap())
         .collect();
 
-    part1(&input);
-    part2(&input);
+    part1(input.clone());
+    part2(input.clone());
 }
 
-fn part1(input: &Vec<usize>) {
-    let mut memory = input.clone();
+fn part1(mut memory: Vec<usize>) {
     // "Before running the program, replace position 1 with the value 12 and replace position 2 with the value 2."
     memory[1] = 12;
     memory[2] = 2;
@@ -21,11 +21,11 @@ fn part1(input: &Vec<usize>) {
     println!("Part 1: {}", result);
 }
 
-fn part2(input: &Vec<usize>) {
+fn part2(input: Vec<usize>) {
     // Find pair of inputs that give target result
     let mut result_noun = 0;
     let mut result_verb = 0;
-    let target_result = 19690720;
+    let target_result = 1969_0720;
     'outer_loop: for noun in 0..=99 {
         for verb in 0..=99 {
             let mut memory = input.clone();

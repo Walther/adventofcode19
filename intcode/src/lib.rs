@@ -1,3 +1,5 @@
+#![deny(clippy::all)]
+
 /// Implements the Intcode computer as specified by Advent of Code 2019.
 /// Given an input Vec of integers, runs the computations and returns the result
 /// integer. Mutates memory during computation.
