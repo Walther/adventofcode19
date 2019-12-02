@@ -13,26 +13,26 @@ fn main() {
 }
 
 fn part1(input: &Vec<usize>) {
-    let mut punchcard = input.clone();
+    let mut memory = input.clone();
     // "Before running the program, replace position 1 with the value 12 and replace position 2 with the value 2."
-    punchcard[1] = 12;
-    punchcard[2] = 2;
-    let result = compute(&punchcard);
+    memory[1] = 12;
+    memory[2] = 2;
+    let result = compute(&memory);
     println!("Part 1: {}", result);
 }
 
 fn part2(input: &Vec<usize>) {
-    let orig_punchcard = input.clone();
+    let orig_memory = input.clone();
     // Find pair of inputs that give target result
     let mut result_noun = 0;
     let mut result_verb = 0;
     let target_result = 19690720;
     'outer_loop: for noun in 0..=99 {
         for verb in 0..=99 {
-            let mut punchcard = orig_punchcard.clone();
-            punchcard[1] = noun;
-            punchcard[2] = verb;
-            let result = compute(&punchcard);
+            let mut memory = orig_memory.clone();
+            memory[1] = noun;
+            memory[2] = verb;
+            let result = compute(&memory);
             if result == target_result {
                 result_noun = noun;
                 result_verb = verb;

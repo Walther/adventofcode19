@@ -2,32 +2,32 @@
 /// Given an input Vec of integers, runs the computations and returns the result
 /// integer.
 pub fn compute(input: &Vec<usize>) -> usize {
-    let mut punchcard = input.clone();
+    let mut memory = input.clone();
     let mut instruction_pointer = 0;
 
     loop {
-        let opcode = punchcard[instruction_pointer];
+        let opcode = memory[instruction_pointer];
         let increment; // Instruction pointer gets incremented by the amount of parameters used for a given instruction
         match opcode {
             // Addition instruction
             1 => {
-                let addr1 = punchcard[instruction_pointer + 1];
-                let addr2 = punchcard[instruction_pointer + 2];
-                let target_addr = punchcard[instruction_pointer + 3];
+                let addr1 = memory[instruction_pointer + 1];
+                let addr2 = memory[instruction_pointer + 2];
+                let target_addr = memory[instruction_pointer + 3];
                 increment = 4;
 
-                let result = punchcard[addr1] + punchcard[addr2];
-                punchcard[target_addr] = result;
+                let result = memory[addr1] + memory[addr2];
+                memory[target_addr] = result;
             }
             // Multiplication instruction
             2 => {
-                let addr1 = punchcard[instruction_pointer + 1];
-                let addr2 = punchcard[instruction_pointer + 2];
-                let target_addr = punchcard[instruction_pointer + 3];
+                let addr1 = memory[instruction_pointer + 1];
+                let addr2 = memory[instruction_pointer + 2];
+                let target_addr = memory[instruction_pointer + 3];
                 increment = 4;
 
-                let result = punchcard[addr1] * punchcard[addr2];
-                punchcard[target_addr] = result;
+                let result = memory[addr1] * memory[addr2];
+                memory[target_addr] = result;
             }
             // End of computation instruction
             99 => {
@@ -40,7 +40,7 @@ pub fn compute(input: &Vec<usize>) -> usize {
         }
         instruction_pointer += increment;
     }
-    punchcard[0]
+    memory[0]
 }
 
 #[cfg(test)]
