@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::HashSet;
 
 fn main() {
     const INPUT: &str = include_str!("input.txt");
@@ -9,30 +9,22 @@ fn main() {
 
     // dbg!(wire1);
     // dbg!(wire2);
-
-    let traces1: Vec<Trace> = parse_trace(wire1);
-    let traces2: Vec<Trace> = parse_trace(wire2);
-
-    let mut board: Board = HashMap::new();
-    board = draw_trace(board, traces1);
-    board = draw_trace(board, traces2);
+    let traces1 = draw_trace(parse_trace(wire1));
+    let traces2 = draw_trace(parse_trace(wire2));
 
     // Part 1
-    let crossings: Vec<(&(isize, isize), &usize)> = board
-        .iter()
-        .filter(|&(_coord, visits)| *visits >= 2)
-        .collect();
-    dbg!(crossings.clone());
+    let crossings: HashSet<_> = traces1.intersection(&traces2).collect();
+    // dbg!(crossings.clone());
     let mut distances: Vec<((isize, isize), usize)> = crossings
         .iter()
-        .map(|&(coord, _visits)| (*coord, manhattan((0, 0), *coord)))
+        .map(|&coord| (*coord, manhattan((0, 0), *coord)))
         .collect();
     distances.sort_by_key(|(_coord, distance)| *distance);
     println!("Part 1: {}", (distances[0].1))
 }
 
-// Hashmap of key: (x,y) value: number of visits
-type Board = HashMap<(isize, isize), usize>;
+// HashSet of visited coordinates
+type Coords = HashSet<(isize, isize)>;
 
 enum Direction {
     Up,
@@ -69,45 +61,40 @@ fn parse_trace(instructions: Vec<&str>) -> Vec<Trace> {
         .collect()
 }
 
-fn draw_trace(mut board: Board, traces: Vec<Trace>) -> Board {
+fn draw_trace(traces: Vec<Trace>) -> Coords {
+    let mut coords: Coords = HashSet::new();
+
     let mut x: isize = 0;
     let mut y: isize = 0;
     for trace in traces {
         match trace.direction {
             Direction::Up => {
                 for _ in 0..trace.length {
-                    y += trace.length;
-                    mark_board(&mut board, x, y);
+                    y += 1;
+                    coords.insert((x, y));
                 }
             }
             Direction::Down => {
                 for _ in 0..trace.length {
-                    y -= trace.length;
-                    mark_board(&mut board, x, y);
+                    y -= 1;
+                    coords.insert((x, y));
                 }
             }
             Direction::Left => {
                 for _ in 0..trace.length {
-                    x -= trace.length;
-                    mark_board(&mut board, x, y);
+                    x -= 1;
+                    coords.insert((x, y));
                 }
             }
             Direction::Right => {
                 for _ in 0..trace.length {
-                    x += trace.length;
-                    mark_board(&mut board, x, y);
+                    x += 1;
+                    coords.insert((x, y));
                 }
             }
         }
     }
-    board
-}
-
-fn mark_board(board: &mut Board, x: isize, y: isize) {
-    board
-        .entry((x, y))
-        .and_modify(|visits| *visits += 1)
-        .or_insert(1);
+    coords
 }
 
 fn manhattan((x1, y1): (isize, isize), (x2, y2): (isize, isize)) -> usize {
