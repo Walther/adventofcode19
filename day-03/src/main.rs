@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::collections::HashSet;
 
 fn main() {
@@ -13,18 +14,33 @@ fn main() {
     let traces2 = draw_trace(parse_trace(wire2));
 
     // Part 1
-    let crossings: HashSet<_> = traces1.intersection(&traces2).collect();
+    let coords1: HashSet<_> = traces1.keys().collect();
+    let coords2: HashSet<_> = traces2.keys().collect();
+    let crossings: HashSet<_> = coords1.intersection(&coords2).collect();
     // dbg!(crossings.clone());
-    let mut distances: Vec<((isize, isize), usize)> = crossings
+    let mut distances: Vec<_> = crossings
         .iter()
-        .map(|&coord| (*coord, manhattan((0, 0), *coord)))
+        .map(|&coord| (*coord, manhattan((0, 0), **coord)))
         .collect();
     distances.sort_by_key(|(_coord, distance)| *distance);
-    println!("Part 1: {}", (distances[0].1))
+    println!("Part 1: {}", (distances[0].1));
+
+    // Part 2
+    let minimum_steps = crossings
+        .iter()
+        .map(|&coord| {
+            let steps1 = traces1.get(*coord).unwrap();
+            let steps2 = traces2.get(*coord).unwrap();
+            steps1 + steps2
+        })
+        .min()
+        .unwrap();
+
+    println!("Part 2: {}", minimum_steps);
 }
 
-// HashSet of visited coordinates
-type Coords = HashSet<(isize, isize)>;
+// HashMap of visited coordinates & earliest visit step
+type Coords = HashMap<(isize, isize), usize>;
 
 enum Direction {
     Up,
@@ -62,34 +78,39 @@ fn parse_trace(instructions: Vec<&str>) -> Vec<Trace> {
 }
 
 fn draw_trace(traces: Vec<Trace>) -> Coords {
-    let mut coords: Coords = HashSet::new();
+    let mut coords: Coords = HashMap::new();
 
     let mut x: isize = 0;
     let mut y: isize = 0;
+    let mut step = 0;
     for trace in traces {
         match trace.direction {
             Direction::Up => {
                 for _ in 0..trace.length {
+                    step += 1;
                     y += 1;
-                    coords.insert((x, y));
+                    coords.entry((x, y)).or_insert(step);
                 }
             }
             Direction::Down => {
                 for _ in 0..trace.length {
+                    step += 1;
                     y -= 1;
-                    coords.insert((x, y));
+                    coords.entry((x, y)).or_insert(step);
                 }
             }
             Direction::Left => {
                 for _ in 0..trace.length {
+                    step += 1;
                     x -= 1;
-                    coords.insert((x, y));
+                    coords.entry((x, y)).or_insert(step);
                 }
             }
             Direction::Right => {
                 for _ in 0..trace.length {
+                    step += 1;
                     x += 1;
-                    coords.insert((x, y));
+                    coords.entry((x, y)).or_insert(step);
                 }
             }
         }
