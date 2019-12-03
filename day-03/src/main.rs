@@ -39,7 +39,7 @@ fn main() {
 }
 
 // HashMap of visited coordinates & earliest visit step
-type Coords = HashMap<(isize, isize), usize>;
+type Coords = HashMap<(i32, i32), u32>;
 
 enum Direction {
     Up,
@@ -50,7 +50,7 @@ enum Direction {
 
 struct Trace {
     direction: Direction,
-    length: isize,
+    length: i32,
 }
 
 // TODO: serde?
@@ -61,7 +61,7 @@ fn parse_trace(instructions: Vec<&str>) -> Vec<Trace> {
             // Parsing the instruction
             let mut chars = instruction.chars();
             let dir = chars.next().unwrap();
-            let length = chars.collect::<String>().parse::<isize>().unwrap();
+            let length = chars.collect::<String>().parse::<i32>().unwrap();
             Trace {
                 direction: match dir {
                     'U' => Direction::Up,
@@ -79,8 +79,8 @@ fn parse_trace(instructions: Vec<&str>) -> Vec<Trace> {
 fn draw_trace(traces: Vec<Trace>) -> Coords {
     let mut coords: Coords = HashMap::new();
 
-    let mut x: isize = 0;
-    let mut y: isize = 0;
+    let mut x: i32 = 0;
+    let mut y: i32 = 0;
     let mut step = 0;
     for trace in traces {
         for _ in 0..trace.length {
@@ -108,6 +108,6 @@ fn draw_trace(traces: Vec<Trace>) -> Coords {
     coords
 }
 
-fn manhattan((x1, y1): (isize, isize), (x2, y2): (isize, isize)) -> usize {
-    (x2 - x1).abs() as usize + (y2 - y1).abs() as usize
+fn manhattan((x1, y1): (i32, i32), (x2, y2): (i32, i32)) -> u32 {
+    (x2 - x1).abs() as u32 + (y2 - y1).abs() as u32
 }
